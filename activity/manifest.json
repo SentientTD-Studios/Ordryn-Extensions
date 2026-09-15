@@ -1,0 +1,43 @@
+{
+  "id": "activity",
+  "name": "Board activity",
+  "version": "1.0.0",
+  "host_api": 1,
+  "description": "JSON webhook for board-level changes: moves, tags, overdue, reorder, and project settings. Skips routine task.updated noise.",
+  "hooks": [
+    { "on": "task.moved" },
+    { "on": "task.tagged" },
+    { "on": "task.overdue" },
+    { "on": "task.reordered" },
+    { "on": "project.updated" }
+  ],
+  "delivery": {
+    "type": "http.webhook",
+    "url_from": "webhook_url",
+    "format": "json"
+  },
+  "settings": [
+    {
+      "key": "webhook_url",
+      "type": "secret",
+      "label": "Webhook URL",
+      "description": "HTTPS URL of the receiver (n8n, Zapier, or a listener you write). Private addresses are rejected.",
+      "required": true,
+      "scope": "project"
+    },
+    {
+      "key": "triggers",
+      "type": "hook_select",
+      "label": "Triggers",
+      "description": "Board activity events. Reorder is one POST with {count}, not one per card.",
+      "scope": "project"
+    }
+  ],
+  "templates": {
+    "task.moved": "{name} moved in {project} (sprint {sprint}) ({url})",
+    "task.tagged": "Tags on {name}: {tags} ({url})",
+    "task.overdue": "{name} is overdue ({due_date}) in {project} ({url})",
+    "task.reordered": "{count} tasks reordered in {project}",
+    "project.updated": "Project {project} was updated by {actor}"
+  }
+}

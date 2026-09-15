@@ -1,6 +1,6 @@
 # Microsoft Teams notifications
 
-Posts task events to a Teams channel using a Workflows incoming webhook (Adaptive Card). Core is not patched; this folder is a drop-in extension. Each **project owner** configures their own channel. Personal tasks (no project) are never posted.
+Posts task events to a Teams channel using a Workflows incoming webhook (Adaptive Card with title and Open action). Core is not patched; this folder is a drop-in extension. Project owners configure a team channel; any member can add a personal “Notify me” destination.
 
 Office 365 Connector incoming webhooks are retired; use a Teams **Workflow**.
 
@@ -17,4 +17,4 @@ The site admin must enable the extension before any project can post. Channel, t
 
 With **Only notify when status changes** on, `task.updated` is skipped unless the kanban/list status actually changed.
 
-Templates may use `{task}` `{name}` `{status}` `{old_status}` `{project}` `{actor}` `{url}` `{id}` `{priority}`. Leave a template blank to skip that trigger. If a project leaves a template unset, the defaults in this manifest are used.
+Templates may use `{task}` `{name}` `{status}` `{old_status}` `{project}` `{actor}` `{url}` `{id}` `{priority}` `{comment}` `{claimed_by}` `{due_date}` `{sprint}` `{tags}` `{count}`. Leave a template blank to skip that trigger. If a project leaves a template unset, the defaults in this manifest are used.

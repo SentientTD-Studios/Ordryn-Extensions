@@ -1,6 +1,8 @@
 # Discord notifications
 
-Posts task events to a Discord channel using an incoming webhook. Core is not patched; this folder is a drop-in extension. Each **project owner** configures their own channel. Personal tasks (no project) are never posted.
+Posts task events to a Discord channel using an incoming webhook. Core is not patched; this folder is a drop-in extension. Project owners configure a team channel; any member can add a personal “Notify me” destination. Personal inbox tasks (no project) use Settings → Integrations.
+
+Messages include `{content}` plus a small embed (title, status, actor, Open URL). When Discord returns a message id, later `task.commented` events post as thread replies (`wait=true` on create).
 
 ## Install
 
@@ -13,10 +15,12 @@ Posts task events to a Discord channel using an incoming webhook. Core is not pa
 
 The site admin must enable the extension before any project can post. Channel, triggers, and templates live on the project, not in Admin → Extensions.
 
-Sibling examples under `examples/extensions/` cover Slack, Microsoft Teams, and a generic HTTPS webhook (`http.webhook`) for other receivers.
+Sibling examples under `examples/extensions/` cover Slack, Microsoft Teams, a generic HTTPS webhook, ntfy, email, due-dates, comments, claimed, board activity, and join-requests.
 
 With **Only notify when status changes** on, `task.updated` is skipped unless the kanban/list status actually changed.
 
-Templates may use `{task}` `{name}` `{status}` `{old_status}` `{project}` `{actor}` `{url}` `{id}` `{priority}`. Leave a template blank to skip that trigger. If a project leaves a template unset, the defaults in this manifest are used.
+Templates may use `{task}` `{name}` `{status}` `{old_status}` `{project}` `{actor}` `{url}` `{id}` `{priority}` `{comment}` `{claimed_by}` `{due_date}` `{sprint}` `{tags}` `{count}`. Leave a template blank to skip that trigger. If a project leaves a template unset, the defaults in this manifest are used.
 
 Optional `description` on the extension and on each setting is shown in the UI under the field label.
+
+Optional actor mention map (JSON on the project form) replaces `{actor}` with a Discord mention id when the Ordryn username matches.

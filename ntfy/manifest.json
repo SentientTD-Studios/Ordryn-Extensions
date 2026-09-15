@@ -1,0 +1,60 @@
+{
+  "id": "ntfy",
+  "name": "ntfy",
+  "version": "1.0.0",
+  "host_api": 1,
+  "description": "Push task events to an ntfy topic (ntfy.sh or a public HTTPS self-hosted server).",
+  "hooks": [
+    { "on": "task.created" },
+    { "on": "task.updated" },
+    { "on": "task.deleted" },
+    { "on": "task.commented" },
+    { "on": "task.claimed" },
+    { "on": "task.due_changed" },
+    { "on": "task.overdue" }
+  ],
+  "delivery": {
+    "type": "ntfy.webhook",
+    "url_from": "webhook_url"
+  },
+  "settings": [
+    {
+      "key": "webhook_url",
+      "type": "secret",
+      "label": "Topic URL",
+      "description": "HTTPS topic URL such as https://ntfy.sh/my-topic. Private/LAN hosts are rejected.",
+      "required": true,
+      "scope": "project"
+    },
+    {
+      "key": "ntfy_auth",
+      "type": "secret",
+      "label": "Access token (optional)",
+      "description": "Bearer token if the ntfy topic requires authentication.",
+      "scope": "project"
+    },
+    {
+      "key": "triggers",
+      "type": "hook_select",
+      "label": "Triggers",
+      "description": "Choose which events should notify this topic.",
+      "scope": "project"
+    },
+    {
+      "key": "status_only",
+      "type": "bool",
+      "label": "Only notify when status changes (for task.updated)",
+      "description": "When enabled, task.updated is skipped unless the kanban or list status actually changed.",
+      "scope": "project"
+    }
+  ],
+  "templates": {
+    "task.created": "New task {name} in {project}",
+    "task.updated": "{name} → {status} in {project}",
+    "task.deleted": "{name} deleted from {project}",
+    "task.commented": "{actor} on {name}: {comment}",
+    "task.claimed": "{actor} claimed {name}",
+    "task.due_changed": "{name} due {due_date}",
+    "task.overdue": "{name} is overdue ({due_date})"
+  }
+}

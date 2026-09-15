@@ -1,0 +1,36 @@
+{
+  "id": "due-dates",
+  "name": "Due dates",
+  "version": "1.0.0",
+  "host_api": 1,
+  "description": "Email when a due date is set, cleared, or a project task becomes overdue. Quieter than the full Email extension.",
+  "hooks": [
+    { "on": "task.due_changed" },
+    { "on": "task.overdue" }
+  ],
+  "delivery": {
+    "type": "email",
+    "address_from": "notify_email"
+  },
+  "settings": [
+    {
+      "key": "notify_email",
+      "type": "secret",
+      "label": "Notify email",
+      "description": "Address that should receive due-date mail. Site email must be configured in Admin.",
+      "required": true,
+      "scope": "project"
+    },
+    {
+      "key": "triggers",
+      "type": "hook_select",
+      "label": "Triggers",
+      "description": "Choose due-date events. Leave a message blank to skip that trigger.",
+      "scope": "project"
+    }
+  ],
+  "templates": {
+    "task.due_changed": "Due date for {name} in {project} is now {due_date} ({url})",
+    "task.overdue": "{name} is overdue ({due_date}) in {project} ({url})"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "claimed",
+  "name": "Claimed",
+  "version": "1.0.0",
+  "host_api": 1,
+  "description": "Push ntfy alerts when a kanban task is claimed, unclaimed, or overdue. Works well as a personal Notify me destination.",
+  "hooks": [
+    { "on": "task.claimed" },
+    { "on": "task.unclaimed" },
+    { "on": "task.overdue" }
+  ],
+  "delivery": {
+    "type": "ntfy.webhook",
+    "url_from": "webhook_url"
+  },
+  "settings": [
+    {
+      "key": "webhook_url",
+      "type": "secret",
+      "label": "Topic URL",
+      "description": "HTTPS topic URL such as https://ntfy.sh/my-claims. Private/LAN hosts are rejected.",
+      "required": true,
+      "scope": "project"
+    },
+    {
+      "key": "ntfy_auth",
+      "type": "secret",
+      "label": "Access token (optional)",
+      "description": "Bearer token if the ntfy topic requires authentication.",
+      "scope": "project"
+    },
+    {
+      "key": "triggers",
+      "type": "hook_select",
+      "label": "Triggers",
+      "description": "Claim and overdue events. Enable claimed_is_me on Notify me to only hear about your own cards.",
+      "scope": "project"
+    }
+  ],
+  "templates": {
+    "task.claimed": "{actor} claimed {name} in {project}",
+    "task.unclaimed": "{actor} unclaimed {name} in {project}",
+    "task.overdue": "{name} is overdue ({due_date}) in {project}"
+  }
+}

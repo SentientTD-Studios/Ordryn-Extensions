@@ -1,0 +1,35 @@
+{
+  "id": "comments",
+  "name": "Comments webhook",
+  "version": "1.0.0",
+  "host_api": 1,
+  "description": "Post discussion comments as JSON to n8n, Zapier, or any public HTTPS listener.",
+  "hooks": [
+    { "on": "task.commented" }
+  ],
+  "delivery": {
+    "type": "http.webhook",
+    "url_from": "webhook_url",
+    "format": "json"
+  },
+  "settings": [
+    {
+      "key": "webhook_url",
+      "type": "secret",
+      "label": "Webhook URL",
+      "description": "HTTPS URL of the receiver. Private, loopback, and link-local addresses are rejected.",
+      "required": true,
+      "scope": "project"
+    },
+    {
+      "key": "triggers",
+      "type": "hook_select",
+      "label": "Triggers",
+      "description": "Leave enabled to post new comments. Blank the message template to skip.",
+      "scope": "project"
+    }
+  ],
+  "templates": {
+    "task.commented": "{actor} commented on {name}: {comment} ({url})"
+  }
+}

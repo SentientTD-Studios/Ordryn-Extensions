@@ -1,14 +1,22 @@
 {
   "id": "teams",
   "name": "Microsoft Teams",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "host_api": 1,
   "description": "Post task events from this project to a Microsoft Teams channel using a Workflows incoming webhook.",
   "hooks": [
     { "on": "task.created" },
     { "on": "task.updated" },
     { "on": "task.deleted" },
-    { "on": "task.commented" }
+    { "on": "task.commented" },
+    { "on": "task.claimed" },
+    { "on": "task.unclaimed" },
+    { "on": "task.due_changed" },
+    { "on": "task.moved" },
+    { "on": "task.tagged" },
+    { "on": "task.overdue" },
+    { "on": "task.reordered" },
+    { "on": "project.updated" }
   ],
   "delivery": {
     "type": "teams.webhook",
@@ -42,6 +50,14 @@
     "task.created": "New task **{name}** in **{project}** ({url})",
     "task.updated": "Task **{name}** updated to **{status}** in project **{project}**",
     "task.deleted": "Task **{name}** deleted from **{project}**",
-    "task.commented": "{actor} commented on **{name}** in **{project}** ({url})"
+    "task.commented": "{actor} commented on **{name}**: {comment} ({url})",
+    "task.claimed": "{actor} claimed **{name}** in **{project}**",
+    "task.unclaimed": "{actor} unclaimed **{name}** in **{project}**",
+    "task.due_changed": "Due date for **{name}** is now {due_date} ({url})",
+    "task.moved": "**{name}** moved in **{project}** (sprint {sprint})",
+    "task.tagged": "Tags on **{name}**: {tags}",
+    "task.overdue": "**{name}** is overdue ({due_date}) in **{project}** ({url})",
+    "task.reordered": "{count} tasks reordered in **{project}**",
+    "project.updated": "Project **{project}** was updated by {actor}"
   }
 }
