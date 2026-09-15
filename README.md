@@ -2,7 +2,7 @@
 
 Example and future Ordryn extensions, kept out of the Ordryn core so they can evolve independently.
 
-An extension is a **folder with a `manifest.json`**. Ordryn loads it at startup, renders the UI itself, and (for notifications) sends outbound HTTP. There is no extension process, no plugin VM, and no custom JavaScript in host API 1.
+An extension is a **folder with a `manifest.json`**. Ordryn loads it at startup, renders the UI itself, and (for notifications) POSTs JSON to a webhook. There is no extension process, no plugin VM, and no custom JavaScript in host API 1.
 
 ## Layout
 
@@ -122,13 +122,22 @@ See [fields-demo](fields-demo/) for one field of each type, and [severity](sever
 
 ## Notifications (hooks)
 
-Hook extensions subscribe to task events and send a message somewhere. Host API 1 supports one delivery backend: a Discord incoming webhook.
+Hook extensions subscribe to task events and POST JSON to a webhook URL the project owner configures. Host API 1 has four delivery types:
+
+| `delivery.type` | Use for | Body |
+| --- | --- | --- |
+| `http.webhook` | Any public HTTPS receiver (n8n, Zapier, Mattermost, Google Chat, custom listeners) | Chosen by `format` (see below) |
+| `discord.webhook` | Discord incoming webhooks | `{"content": "…"}` |
+| `slack.webhook` | Slack incoming webhooks | `{"text": "…"}` |
+| `teams.webhook` | Teams Workflows incoming webhooks | Adaptive Card |
+
+Prefer the dedicated Discord / Slack / Teams examples when targeting those services: they send the payload the service expects and restrict the URL host. Use `http.webhook` for everything else.
 
 ```json
 {
-  "id": "discord",
-  "name": "Discord",
-  "version": "1.1.0",
+  "id": "webhook",
+  "name": "Generic webhook",
+  "version": "1.0.0",
   "host_api": 1,
   "hooks": [
     { "on": "task.created" },
@@ -137,20 +146,21 @@ Hook extensions subscribe to task events and send a message somewhere. Host API 
     { "on": "task.commented" }
   ],
   "delivery": {
-    "type": "discord.webhook",
-    "url_from": "webhook_url"
+    "type": "http.webhook",
+    "url_from": "webhook_url",
+    "format": "json"
   },
   "settings": [
     {
       "key": "webhook_url",
       "type": "secret",
-      "label": "Channel webhook URL",
+      "label": "Webhook URL",
       "required": true,
       "scope": "project"
     }
   ],
   "templates": {
-    "task.created": "New task **{name}** in **{project}** ({url})"
+    "task.created": "New task {name} in {project} ({url})"
   }
 }
 ```
@@ -186,12 +196,51 @@ Only the four `task.*` events that say “yes” produce outbound messages. The 
 
 | Field | Required | Notes |
 | --- | --- | --- |
-| `type` | yes | Only `discord.webhook`. |
+| `type` | yes | `http.webhook`, `discord.webhook`, `slack.webhook`, or `teams.webhook`. |
 | `url_from` | yes | Must be a `settings` key (almost always a `secret`). |
+| `format` | no | Only for `http.webhook`. One of `json`, `text`, or `content`. Defaults to `text` (`{"text": "…"}`) if omitted. Rejected on provider-specific types. |
 
-Discord URLs are validated by the host (HTTPS, `discord.com` / `discordapp.com`, `/api/webhooks/…`). The payload is `{"content": "…"}`. Content is trimmed to 2000 characters; `@everyone` / `@here` are stripped.
+Every delivery is `POST` with `Content-Type: application/json`, a 5s timeout, and no redirects. Interpolated message text is trimmed to 2000 characters; `@everyone` / `@here` are stripped.
 
 Project owners can send a test post from Project settings → Extensions (bypasses enable/trigger filters; still needs a webhook URL).
+
+#### `http.webhook` formats
+
+| `format` | Body |
+| --- | --- |
+| `json` | Structured event (see [webhook](webhook/)). Includes `text` and `content` plus `event`, `id`, `name`, `task`, `status`, `old_status`, `project`, `actor`, `url`, `priority`. |
+| `text` | `{"text": "…"}` (Slack-style). Default if `format` is omitted. |
+| `content` | `{"content": "…"}` (Discord-style). |
+
+Example `format: json` body:
+
+```json
+{
+  "text": "Task Ship updated to Done in project Ordryn",
+  "content": "Task Ship updated to Done in project Ordryn",
+  "event": "task.updated",
+  "id": "42",
+  "name": "Ship",
+  "task": "Ship",
+  "status": "Done",
+  "old_status": "In progress",
+  "project": "Ordryn",
+  "actor": "ada",
+  "url": "https://todo.example.com/tasks/42",
+  "priority": "High"
+}
+```
+
+#### URL rules
+
+All types require **HTTPS**, no credentials in the URL, and no fragment. Loopback, private, link-local, and similar destinations are rejected.
+
+| Type | Extra host / path rules |
+| --- | --- |
+| `http.webhook` | Any public HTTPS host. Non-443 ports are allowed. |
+| `discord.webhook` | `discord.com`, `discordapp.com`, `canary.discord.com`, or `ptb.discord.com`; path `/api/webhooks/…`; no query string. |
+| `slack.webhook` | `hooks.slack.com`; path `/services/…`, `/triggers/…`, or `/workflows/…`. |
+| `teams.webhook` | `*.logic.azure.com`, `*.api.powerplatform.com`, `webhook.office.com`, or Outlook Office hosts; path required. Query strings are allowed (Workflows URLs include them). |
 
 ### Settings
 
@@ -210,10 +259,10 @@ Settings drive the Admin / project forms. Keys use `^[a-z][a-z0-9_-]{0,32}$`.
 | --- | --- |
 | `secret` | Encrypted value (webhook URL). The API never returns the secret, only whether it is set. |
 | `hook_select` | Project trigger checkboxes, one per declared hook. |
-| `bool` | Boolean flag. The Discord example uses `status_only` for “only notify when status changes”. |
+| `bool` | Boolean flag. The notification examples use `status_only` for “only notify when status changes”. |
 | `project_ids` | Accepted in the manifest; no host UI in API 1. Do not rely on it. |
 
-Site admin currently persists **enabled** only. Channel URL, triggers, templates, and `status_only` live on the **project**. Use `"scope": "project"` for those.
+Site admin currently persists **enabled** only. Webhook URL, triggers, templates, and `status_only` live on the **project**. Use `"scope": "project"` for those.
 
 An extension appears on the project Extensions tab if it has any project-scoped setting **or** any custom fields.
 
@@ -236,9 +285,9 @@ Placeholders (case-insensitive). Unknown tokens become empty.
 | `{id}` | Task id |
 | `{priority}` | `None`, `Low`, `Medium`, or `High` |
 
-Set `PUBLIC_URL` in Ordryn’s `.env` (for example `https://todo.example.com`) so `{url}` is a clickable link. Discord markdown such as `**bold**` is passed through.
+Set `PUBLIC_URL` in Ordryn’s `.env` (for example `https://todo.example.com`) so `{url}` is a clickable link. Markup is passed through unchanged — use Discord `**bold**`, Slack `*bold*`, or plain text depending on the destination.
 
-See [discord](discord/) for a complete notification extension.
+See [webhook](webhook/) for a generic HTTPS receiver, or [discord](discord/), [slack](slack/), and [teams](teams/) for provider-specific payloads.
 
 ## Enablement
 
@@ -253,7 +302,7 @@ Editors cannot manage extensions.
 
 `ui` is an optional relative path inside the extension folder (no `..`, no leading `/`). If set, the file must exist or load fails.
 
-Host API 1 does **not** serve or execute that file. Custom fields and Discord settings are rendered by Ordryn. Leave `ui` omitted unless you are experimenting against a newer host.
+Host API 1 does **not** serve or execute that file. Custom fields and webhook settings are rendered by Ordryn. Leave `ui` omitted unless you are experimenting against a newer host.
 
 ## Checklist
 
@@ -261,7 +310,8 @@ Host API 1 does **not** serve or execute that file. Custom fields and Discord se
 - [ ] `id`, `name`, `version`, `host_api` present (`host_api` is `1`)
 - [ ] Field / setting keys are unique and match the key pattern
 - [ ] Enums have `options`; non-enums do not
-- [ ] Hook extensions declare `hooks`, `delivery.type`, and a matching settings key for `url_from`
+- [ ] Hook extensions declare `hooks`, `delivery.type` (`http.webhook` or a provider type), and a matching settings key for `url_from`
+- [ ] `http.webhook` sets `format` if you need `json` or `content` (otherwise you get `{"text": "…"}`)
 - [ ] Project-facing settings use `"scope": "project"`
 - [ ] Copied to `data/extensions/<id>` and Ordryn restarted
 - [ ] Enabled in Admin, then enabled (and configured) on a project
@@ -272,6 +322,9 @@ Host API 1 does **not** serve or execute that file. Custom fields and Discord se
 | --- | --- | --- |
 | [severity](severity/) | Fields | One enum, sidebar + kanban badge |
 | [fields-demo](fields-demo/) | Fields | All six field types |
-| [discord](discord/) | Hooks | Discord webhook, triggers, templates, `status_only` |
+| [webhook](webhook/) | Hooks | Generic `http.webhook` with `format: json` |
+| [discord](discord/) | Hooks | `discord.webhook` (`{"content": "…"}`) |
+| [slack](slack/) | Hooks | `slack.webhook` (`{"text": "…"}`) |
+| [teams](teams/) | Hooks | `teams.webhook` (Adaptive Card) |
 
-Each example has its own README with install steps. Safe to enable `severity` and `fields-demo` together (different enum keys).
+Each example has its own README with install steps. Safe to enable `severity` and `fields-demo` together (different enum keys). Enable as many notification extensions as you want; each project owner still configures a URL per extension.
