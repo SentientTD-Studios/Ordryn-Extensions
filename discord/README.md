@@ -13,6 +13,8 @@ Posts task events to a Discord channel using an incoming webhook. Core is not pa
 
 The site admin must enable the extension before any project can post. Channel, triggers, and templates live on the project, not in Admin → Extensions.
 
+Sibling examples under `examples/extensions/` cover Slack, Microsoft Teams, and a generic HTTPS webhook (`http.webhook`) for other receivers.
+
 With **Only notify when status changes** on, `task.updated` is skipped unless the kanban/list status actually changed.
 
 Templates may use `{task}` `{name}` `{status}` `{old_status}` `{project}` `{actor}` `{url}` `{id}` `{priority}`. Leave a template blank to skip that trigger. If a project leaves a template unset, the defaults in this manifest are used.
