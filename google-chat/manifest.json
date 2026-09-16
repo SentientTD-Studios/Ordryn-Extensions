@@ -1,0 +1,155 @@
+{
+  "id": "google-chat",
+  "name": "Google Chat",
+  "version": "1.0.0",
+  "host_api": 1,
+  "description": "Post task events from this project to a Google Chat space using an incoming webhook. Sends Chat cards (not generic JSON).",
+  "hooks": [
+    {
+      "on": "task.created"
+    },
+    {
+      "on": "task.updated"
+    },
+    {
+      "on": "task.deleted"
+    },
+    {
+      "on": "task.commented"
+    },
+    {
+      "on": "task.claimed"
+    },
+    {
+      "on": "task.unclaimed"
+    },
+    {
+      "on": "task.due_changed"
+    },
+    {
+      "on": "task.moved"
+    },
+    {
+      "on": "task.tagged"
+    },
+    {
+      "on": "task.overdue"
+    },
+    {
+      "on": "task.reordered"
+    },
+    {
+      "on": "project.updated"
+    }
+  ],
+  "delivery": {
+    "type": "googlechat.webhook",
+    "url_from": "webhook_url"
+  },
+  "settings": [
+    {
+      "key": "webhook_url",
+      "type": "secret",
+      "label": "Incoming webhook URL",
+      "description": "In Google Chat, open the space → Apps & integrations → Webhooks, create a webhook, and paste the chat.googleapis.com URL here.",
+      "required": true,
+      "scope": "project"
+    },
+    {
+      "key": "triggers",
+      "type": "hook_select",
+      "label": "Triggers",
+      "description": "Choose which task events should post to this space.",
+      "scope": "project"
+    },
+    {
+      "key": "status_only",
+      "type": "bool",
+      "label": "Only notify when status changes (for task.updated)",
+      "description": "When enabled, task.updated is skipped unless the kanban or list status actually changed.",
+      "scope": "project"
+    },
+    {
+      "key": "skip_self",
+      "type": "bool",
+      "label": "Skip events I caused",
+      "description": "Do not post when you are the actor.",
+      "scope": "project"
+    },
+    {
+      "key": "claimed_only",
+      "type": "bool",
+      "label": "Only claimed tasks",
+      "description": "Skip events for tasks that nobody has claimed.",
+      "scope": "project"
+    },
+    {
+      "key": "min_priority",
+      "type": "priority",
+      "label": "Minimum priority",
+      "description": "Ignore events below this priority.",
+      "scope": "project"
+    },
+    {
+      "key": "tag_ids",
+      "type": "tag_ids",
+      "label": "Only these tags",
+      "description": "If any tags are selected, only matching tasks notify.",
+      "scope": "project"
+    },
+    {
+      "key": "quiet_hours_start",
+      "type": "time",
+      "label": "Quiet hours start",
+      "description": "Hold deliveries until quiet hours end. Leave blank to send immediately.",
+      "scope": "project"
+    },
+    {
+      "key": "quiet_hours_end",
+      "type": "time",
+      "label": "Quiet hours end",
+      "description": "End of the quiet window in your timezone.",
+      "scope": "project"
+    },
+    {
+      "key": "digest",
+      "type": "digest",
+      "label": "Digest",
+      "description": "Batch notifications hourly or daily instead of sending immediately.",
+      "scope": "project"
+    },
+    {
+      "key": "field_filter",
+      "type": "field_filter",
+      "label": "Custom field filter",
+      "description": "Only notify when this custom field key matches (and equals the value if set).",
+      "scope": "project"
+    },
+    {
+      "key": "mention_map",
+      "type": "mention_map",
+      "label": "Actor mention map (JSON)",
+      "description": "Map Ordryn usernames to Google Chat users, for example {\"ada\":\"<users/123456789>\"}.",
+      "scope": "project"
+    }
+  ],
+  "templates": {
+    "task.created": "New task *{name}* in *{project}* ({url})",
+    "task.updated": "Task *{name}* updated to *{status}* in project *{project}*",
+    "task.deleted": "Task *{name}* deleted from *{project}*",
+    "task.commented": "{actor} commented on *{name}*: {comment} ({url})",
+    "task.claimed": "{actor} claimed *{name}* in *{project}*",
+    "task.unclaimed": "{actor} unclaimed *{name}* in *{project}*",
+    "task.due_changed": "Due date for *{name}* is now {due_date} ({url})",
+    "task.moved": "*{name}* moved in *{project}* (sprint {sprint})",
+    "task.tagged": "Tags on *{name}*: {tags}",
+    "task.overdue": "*{name}* is overdue ({due_date}) in *{project}* ({url})",
+    "task.reordered": "{count} tasks reordered in *{project}*",
+    "project.updated": "Project *{project}* was updated by {actor}"
+  },
+  "controls": [
+    "send_test",
+    "rotate_signing",
+    "sample_json"
+  ]
+}
