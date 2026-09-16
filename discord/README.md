@@ -15,11 +15,11 @@ Messages include `{content}` plus a small embed (title, status, actor, Open URL)
 
 The site admin must enable the extension before any project can post. Channel, triggers, and templates live on the project, not in Admin → Extensions.
 
-Sibling examples under `examples/extensions/` cover Slack, Microsoft Teams, a generic HTTPS webhook, ntfy, email, due-dates, comments, claimed, board activity, and join-requests.
+Sibling examples under `examples/extensions/` cover Slack, Microsoft Teams, Google Chat, a generic HTTPS webhook, ntfy, email, due-dates, comments, claimed, board activity, lifecycle, mentions, callback-bot, and join-requests.
 
 With **Only notify when status changes** on, `task.updated` is skipped unless the kanban/list status actually changed.
 
-Templates may use `{task}` `{name}` `{status}` `{old_status}` `{project}` `{actor}` `{url}` `{id}` `{priority}` `{comment}` `{claimed_by}` `{due_date}` `{sprint}` `{tags}` `{count}`. Leave a template blank to skip that trigger. If a project leaves a template unset, the defaults in this manifest are used.
+Templates may use `{task}` `{name}` `{status}` `{old_status}` `{project}` `{actor}` `{url}` `{id}` `{priority}` `{comment}` `{claimed_by}` `{due_date}` `{sprint}` `{tags}` `{mentions}` `{member}` `{count}`. Leave a template blank to skip that trigger. If a project leaves a template unset, the defaults in this manifest are used.
 
 Optional `description` on the extension and on each setting is shown in the UI under the field label.
 

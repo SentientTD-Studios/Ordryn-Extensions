@@ -15,6 +15,6 @@ Comments on the same task reuse a `threadKey` so they stay in one thread when Go
 
 The site admin must enable the extension before any project can post. Space URL, triggers, and templates live on the project.
 
-Templates use Google Chat text formatting (`*bold*`). Tokens: `{task}` `{name}` `{status}` `{old_status}` `{project}` `{actor}` `{url}` `{id}` `{priority}` `{comment}` `{claimed_by}` `{due_date}` `{sprint}` `{tags}` `{count}`. Leave a template blank to skip that trigger.
+Templates use Google Chat text formatting (`*bold*`). Tokens: `{task}` `{name}` `{status}` `{old_status}` `{project}` `{actor}` `{url}` `{id}` `{priority}` `{comment}` `{claimed_by}` `{due_date}` `{sprint}` `{tags}` `{mentions}` `{member}` `{count}`. Leave a template blank to skip that trigger.
 
 Optional actor mention map (JSON) replaces `{actor}` with a Chat user mention such as `<users/123456789>`.

@@ -17,4 +17,4 @@ The site admin must enable the extension before any project can post. Channel, t
 
 With **Only notify when status changes** on, `task.updated` is skipped unless the kanban/list status actually changed.
 
-Templates may use `{task}` `{name}` `{status}` `{old_status}` `{project}` `{actor}` `{url}` `{id}` `{priority}` `{comment}` `{claimed_by}` `{due_date}` `{sprint}` `{tags}` `{count}`. Leave a template blank to skip that trigger. If a project leaves a template unset, the defaults in this manifest are used.
+Templates may use `{task}` `{name}` `{status}` `{old_status}` `{project}` `{actor}` `{url}` `{id}` `{priority}` `{comment}` `{claimed_by}` `{due_date}` `{sprint}` `{tags}` `{mentions}` `{member}` `{count}`. Leave a template blank to skip that trigger. If a project leaves a template unset, the defaults in this manifest are used.

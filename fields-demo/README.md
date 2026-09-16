@@ -1,6 +1,6 @@
 # Custom fields demo
 
-Manifest-only catalog of every v1 custom field type: string, number, boolean, enum, url, and user. Core renders the sidebar and badges. Safe to enable alongside `severity` (this enum is Size, not Severity).
+Manifest-only catalog of every v1 custom field type: string, number, boolean, enum, url, user, date, and markdown. Core renders the sidebar and badges. Safe to enable alongside `severity` (this enum is Size, not Severity).
 
 ## Install
 
@@ -9,4 +9,4 @@ Manifest-only catalog of every v1 custom field type: string, number, boolean, en
 3. Site admin: Admin → Extensions → Custom fields demo → Enable, then Save.
 4. Project owner: Project settings → Extensions → Custom fields demo → Enable for this project, Save.
 
-Then edit a project task. Ticket and owner show on list rows; score, blocked, and size show on the board; spec stays in the sidebar.
+Then edit a project task. Ticket, owner, and review-on show on list rows; score, blocked, and size show on the board; spec and field notes stay in the sidebar.

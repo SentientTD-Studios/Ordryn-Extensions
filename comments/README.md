@@ -1,6 +1,6 @@
 # Comments webhook
 
-Posts only `task.commented` as structured JSON (`event`, `comment`, `actor`, `url`, and the usual task fields). Use this for a discussion pipeline without status-change noise.
+Posts `task.commented` and `task.mentioned` as structured JSON (`event`, `comment`, `mentions`, `actor`, `url`, and the usual task fields). Use this for a discussion pipeline without status-change noise.
 
 Copy this folder to `data/extensions/comments` (name must stay `comments`), restart, enable in Admin → Extensions, then paste an HTTPS URL on the project Extensions tab.
 

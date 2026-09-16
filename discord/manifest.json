@@ -1,45 +1,121 @@
 {
   "id": "discord",
   "name": "Discord",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "host_api": 1,
   "description": "Post task events from this project to a Discord channel using an incoming webhook.",
+  "author": "SentientTD Studios",
+  "homepage": "https://sentienttd.studio",
+  "license": "MIT",
+  "icon": "icon.svg",
   "hooks": [
     {
-      "on": "task.created"
+      "on": "task.created",
+      "label": "Task created"
     },
     {
-      "on": "task.updated"
+      "on": "task.updated",
+      "label": "Task updated"
     },
     {
-      "on": "task.deleted"
+      "on": "task.deleted",
+      "label": "Task deleted"
     },
     {
-      "on": "task.commented"
+      "on": "task.commented",
+      "label": "Comment posted"
     },
     {
-      "on": "task.claimed"
+      "on": "task.claimed",
+      "label": "Task claimed"
     },
     {
-      "on": "task.unclaimed"
+      "on": "task.unclaimed",
+      "label": "Task unclaimed"
     },
     {
-      "on": "task.due_changed"
+      "on": "task.due_changed",
+      "label": "Due date changed"
     },
     {
-      "on": "task.moved"
+      "on": "task.moved",
+      "label": "Task moved (project or sprint)"
     },
     {
-      "on": "task.tagged"
+      "on": "task.tagged",
+      "label": "Tags changed"
     },
     {
-      "on": "task.overdue"
+      "on": "task.overdue",
+      "label": "Task overdue"
     },
     {
-      "on": "task.reordered"
+      "on": "task.reordered",
+      "label": "Tasks reordered"
     },
     {
-      "on": "project.updated"
+      "on": "project.updated",
+      "label": "Project updated"
+    },
+    {
+      "on": "task.mentioned",
+      "label": "You were mentioned"
+    },
+    {
+      "on": "task.completed",
+      "label": "Task completed"
+    },
+    {
+      "on": "task.reopened",
+      "label": "Task reopened"
+    },
+    {
+      "on": "task.due_soon",
+      "label": "Due tomorrow"
+    },
+    {
+      "on": "task.archived",
+      "label": "Task archived"
+    },
+    {
+      "on": "task.restored",
+      "label": "Task restored"
+    },
+    {
+      "on": "task.project_changed",
+      "label": "Moved to another project"
+    },
+    {
+      "on": "task.sprint_changed",
+      "label": "Sprint changed"
+    },
+    {
+      "on": "project.archived",
+      "label": "Project archived"
+    },
+    {
+      "on": "project.restored",
+      "label": "Project restored"
+    },
+    {
+      "on": "project.member_joined",
+      "label": "Member joined"
+    },
+    {
+      "on": "project.member_left",
+      "label": "Member left"
+    },
+    {
+      "on": "sprint.created",
+      "label": "Sprint created"
+    },
+    {
+      "on": "sprint.started",
+      "label": "Sprint started"
+    },
+    {
+      "on": "sprint.ended",
+      "label": "Sprint ended"
     }
   ],
   "delivery": {
@@ -51,7 +127,7 @@
       "key": "webhook_url",
       "type": "secret",
       "label": "Channel webhook URL",
-      "description": "Create a webhook in Discord (channel settings \u2192 Integrations \u2192 Webhooks) and paste the URL here.",
+      "description": "Create a webhook in Discord (channel settings → Integrations → Webhooks) and paste the URL here.",
       "required": true,
       "scope": "project"
     },
@@ -117,7 +193,22 @@
     "task.tagged": "Tags on **{name}**: {tags}",
     "task.overdue": "**{name}** is overdue ({due_date}) in **{project}** ({url})",
     "task.reordered": "{count} tasks reordered in **{project}**",
-    "project.updated": "Project **{project}** was updated by {actor}"
+    "project.updated": "Project **{project}** was updated by {actor}",
+    "task.mentioned": "{mentions} mentioned in **{name}** by {actor}: {comment} ({url})",
+    "task.completed": "{actor} completed **{name}** in **{project}** ({url})",
+    "task.reopened": "{actor} reopened **{name}** in **{project}** ({url})",
+    "task.due_soon": "**{name}** is due tomorrow ({due_date}) in **{project}** ({url})",
+    "task.archived": "{actor} archived **{name}** in **{project}**",
+    "task.restored": "{actor} restored **{name}** in **{project}** ({url})",
+    "task.project_changed": "**{name}** moved to project **{project}** ({url})",
+    "task.sprint_changed": "**{name}** is now in sprint {sprint} ({url})",
+    "project.archived": "Project **{project}** was archived by {actor}",
+    "project.restored": "Project **{project}** was restored by {actor}",
+    "project.member_joined": "{member} joined **{project}**",
+    "project.member_left": "{member} left **{project}**",
+    "sprint.created": "Sprint {sprint} created in **{project}**",
+    "sprint.started": "Sprint {sprint} started in **{project}**",
+    "sprint.ended": "Sprint {sprint} ended in **{project}**"
   },
   "controls": [
     "send_test",

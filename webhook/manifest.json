@@ -1,48 +1,133 @@
 {
   "id": "webhook",
   "name": "Generic webhook",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "host_api": 1,
-  "description": "Post task events from this project to any public HTTPS webhook (n8n, Zapier, Mattermost, Google Chat, custom listeners, and similar).",
+  "description": "Post task events from this project to any public HTTPS webhook (n8n, Zapier, Mattermost, custom listeners, and similar). For Google Chat, Slack, Discord, or Teams, use those dedicated extensions.",
+  "author": "SentientTD Studios",
+  "homepage": "https://sentienttd.studio",
+  "license": "MIT",
+  "icon": "icon.svg",
   "hooks": [
     {
-      "on": "task.created"
+      "on": "task.created",
+      "label": "Task created"
     },
     {
-      "on": "task.updated"
+      "on": "task.updated",
+      "label": "Task updated"
     },
     {
-      "on": "task.deleted"
+      "on": "task.deleted",
+      "label": "Task deleted"
     },
     {
-      "on": "task.commented"
+      "on": "task.commented",
+      "label": "Comment posted"
     },
     {
-      "on": "task.claimed"
+      "on": "task.claimed",
+      "label": "Task claimed"
     },
     {
-      "on": "task.unclaimed"
+      "on": "task.unclaimed",
+      "label": "Task unclaimed"
     },
     {
-      "on": "task.due_changed"
+      "on": "task.due_changed",
+      "label": "Due date changed"
     },
     {
-      "on": "task.moved"
+      "on": "task.moved",
+      "label": "Task moved (project or sprint)"
     },
     {
-      "on": "task.tagged"
+      "on": "task.tagged",
+      "label": "Tags changed"
     },
     {
-      "on": "task.overdue"
+      "on": "task.overdue",
+      "label": "Task overdue"
     },
     {
-      "on": "task.reordered"
+      "on": "task.reordered",
+      "label": "Tasks reordered"
     },
     {
-      "on": "project.updated"
+      "on": "project.updated",
+      "label": "Project updated"
     },
     {
-      "on": "join.request"
+      "on": "join.request",
+      "label": "Join request submitted"
+    },
+    {
+      "on": "task.mentioned",
+      "label": "You were mentioned"
+    },
+    {
+      "on": "task.completed",
+      "label": "Task completed"
+    },
+    {
+      "on": "task.reopened",
+      "label": "Task reopened"
+    },
+    {
+      "on": "task.due_soon",
+      "label": "Due tomorrow"
+    },
+    {
+      "on": "task.archived",
+      "label": "Task archived"
+    },
+    {
+      "on": "task.restored",
+      "label": "Task restored"
+    },
+    {
+      "on": "task.project_changed",
+      "label": "Moved to another project"
+    },
+    {
+      "on": "task.sprint_changed",
+      "label": "Sprint changed"
+    },
+    {
+      "on": "project.archived",
+      "label": "Project archived"
+    },
+    {
+      "on": "project.restored",
+      "label": "Project restored"
+    },
+    {
+      "on": "project.member_joined",
+      "label": "Member joined"
+    },
+    {
+      "on": "project.member_left",
+      "label": "Member left"
+    },
+    {
+      "on": "sprint.created",
+      "label": "Sprint created"
+    },
+    {
+      "on": "sprint.started",
+      "label": "Sprint started"
+    },
+    {
+      "on": "sprint.ended",
+      "label": "Sprint ended"
+    },
+    {
+      "on": "join.approved",
+      "label": "Join request approved"
+    },
+    {
+      "on": "join.denied",
+      "label": "Join request denied"
     }
   ],
   "delivery": {
@@ -55,7 +140,7 @@
       "key": "webhook_url",
       "type": "secret",
       "label": "Webhook URL",
-      "description": "HTTPS URL of the receiver. Private, loopback, and link-local addresses are rejected. Site-level URL (Admin) is used only for join.request.",
+      "description": "HTTPS URL of the receiver. Private, loopback, and link-local addresses are rejected. Site-level URL (Admin) is used only for join.request / join.approved / join.denied.",
       "required": true,
       "scope": "project"
     },
@@ -150,7 +235,24 @@
     "task.overdue": "{name} is overdue ({due_date}) in {project}",
     "task.reordered": "{count} tasks reordered in {project}",
     "project.updated": "Project {project} was updated by {actor}",
-    "join.request": "New join request from {join_email}: {join_message}"
+    "join.request": "New join request from {join_email}: {join_message}",
+    "task.mentioned": "{mentions} mentioned in {name} by {actor}: {comment} ({url})",
+    "task.completed": "{actor} completed {name} in {project} ({url})",
+    "task.reopened": "{actor} reopened {name} in {project} ({url})",
+    "task.due_soon": "{name} is due tomorrow ({due_date}) in {project} ({url})",
+    "task.archived": "{actor} archived {name} in {project}",
+    "task.restored": "{actor} restored {name} in {project} ({url})",
+    "task.project_changed": "{name} moved to project {project} ({url})",
+    "task.sprint_changed": "{name} is now in sprint {sprint} ({url})",
+    "project.archived": "Project {project} was archived by {actor}",
+    "project.restored": "Project {project} was restored by {actor}",
+    "project.member_joined": "{member} joined {project}",
+    "project.member_left": "{member} left {project}",
+    "sprint.created": "Sprint {sprint} created in {project}",
+    "sprint.started": "Sprint {sprint} started in {project}",
+    "sprint.ended": "Sprint {sprint} ended in {project}",
+    "join.approved": "Join request approved for {join_email}",
+    "join.denied": "Join request denied for {join_email}"
   },
   "controls": [
     "send_test",

@@ -1,6 +1,6 @@
 # Due dates
 
-Posts `task.due_changed` and `task.overdue` as JSON to **your** public HTTPS relay. The relay sends mail using SMTP or an email API **you** configure. Use this when the full Email relay extension is too noisy.
+Posts `task.due_changed`, `task.due_soon` (due tomorrow), and `task.overdue` as JSON to **your** public HTTPS relay. The relay sends mail using SMTP or an email API **you** configure. Use this when the full Email relay extension is too noisy.
 
 Admin → Email (site SMTP/Mailgun) is never used. Password resets and invites stay on that core mailer, which is rate-limited. Project members cannot send through it.
 
@@ -38,4 +38,4 @@ The JSON body matches the generic webhook: `text`, `content`, `event`, `name`, `
 
 You can point Due dates and the full Email relay at the same listener; this sample understands both.
 
-Sibling examples cover Discord, Slack, Teams, a generic HTTPS webhook, ntfy, email relay, comments, claimed, activity, and join-requests.
+Sibling examples cover Discord, Slack, Teams, a generic HTTPS webhook, ntfy, email relay, comments, claimed, activity, lifecycle, mentions, callback-bot, and join-requests.

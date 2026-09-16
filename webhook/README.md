@@ -1,6 +1,6 @@
 # Generic webhook
 
-Posts task events as JSON to any **public HTTPS** webhook. Use this for n8n, Zapier, Mattermost, Google Chat, or a listener you write. For Slack, Discord, or Teams, the dedicated example extensions send the payload those services expect and restrict the URL host.
+Posts task events as JSON to any **public HTTPS** webhook. Use this for n8n, Zapier, Mattermost, or a listener you write. For Slack, Discord, Teams, or Google Chat, the dedicated example extensions send the payload those services expect and restrict the URL host.
 
 Core is not patched; this folder is a drop-in extension. Each **project owner** configures a team URL; members can add their own destination. Personal inbox tasks (no project) use Settings → Integrations. Loopback, private, and link-local destinations are rejected.
 
@@ -46,6 +46,6 @@ Outbound requests include `X-Ordryn-Signature: sha256=<hex>` when a signing secr
 }
 ```
 
-Templates may use `{task}` `{name}` `{status}` `{old_status}` `{project}` `{actor}` `{url}` `{id}` `{priority}` `{comment}` `{claimed_by}` `{due_date}` `{sprint}` `{tags}` `{count}` `{event_id}`. Leave a template blank to skip that trigger.
+Templates may use `{task}` `{name}` `{status}` `{old_status}` `{project}` `{actor}` `{url}` `{id}` `{priority}` `{comment}` `{claimed_by}` `{due_date}` `{sprint}` `{tags}` `{mentions}` `{member}` `{count}` `{event_id}`. Leave a template blank to skip that trigger.
 
-`join.request` is site-level only (Admin → Extensions site URL). It is never posted into every project channel.
+`join.request`, `join.approved`, and `join.denied` are site-level only (Admin → Extensions site URL). They are never posted into every project channel.

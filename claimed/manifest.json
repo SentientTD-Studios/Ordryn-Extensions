@@ -1,18 +1,33 @@
 {
   "id": "claimed",
   "name": "Claimed",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "host_api": 1,
-  "description": "Push ntfy alerts when a kanban task is claimed, unclaimed, or overdue. Works well as a personal Notify me destination.",
+  "description": "Push ntfy alerts when a kanban task is claimed, unclaimed, completed, reopened, or overdue. Works well as a personal Notify me destination.",
+  "author": "SentientTD Studios",
+  "homepage": "https://sentienttd.studio",
+  "license": "MIT",
+  "icon": "icon.svg",
   "hooks": [
     {
-      "on": "task.claimed"
+      "on": "task.claimed",
+      "label": "Task claimed"
     },
     {
-      "on": "task.unclaimed"
+      "on": "task.unclaimed",
+      "label": "Task unclaimed"
     },
     {
-      "on": "task.overdue"
+      "on": "task.overdue",
+      "label": "Task overdue"
+    },
+    {
+      "on": "task.completed",
+      "label": "Task completed"
+    },
+    {
+      "on": "task.reopened",
+      "label": "Task reopened"
     }
   ],
   "delivery": {
@@ -83,12 +98,21 @@
       "label": "Digest",
       "description": "Batch notifications hourly or daily instead of sending immediately.",
       "scope": "project"
+    },
+    {
+      "key": "claimed_is_me",
+      "type": "bool",
+      "label": "Only when claimed by me",
+      "description": "On Notify me, skip tasks that someone else claimed.",
+      "scope": "member"
     }
   ],
   "templates": {
     "task.claimed": "{actor} claimed {name} in {project}",
     "task.unclaimed": "{actor} unclaimed {name} in {project}",
-    "task.overdue": "{name} is overdue ({due_date}) in {project}"
+    "task.overdue": "{name} is overdue ({due_date}) in {project}",
+    "task.completed": "{actor} completed {name} in {project} ({url})",
+    "task.reopened": "{actor} reopened {name} in {project} ({url})"
   },
   "controls": [
     "send_test",

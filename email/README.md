@@ -34,4 +34,6 @@ Put that process behind public HTTPS (Caddy, nginx, Cloudflare Tunnel, or simila
 
 The JSON body matches the generic webhook: `text`, `content`, `event`, `name`, `project`, `actor`, `url`, and related fields. Use `text` as the email body.
 
-Sibling examples cover Discord, Slack, Teams, a generic HTTPS webhook, ntfy, due-dates, comments, claimed, activity, and join-requests.
+For due dates only, copy `examples/extensions/due-dates` instead — same custom-relay pattern, fewer events.
+
+Sibling examples cover Discord, Slack, Teams, a generic HTTPS webhook, ntfy, due-dates, comments, claimed, activity, lifecycle, mentions, callback-bot, and join-requests.

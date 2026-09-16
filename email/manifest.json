@@ -1,30 +1,101 @@
 {
   "id": "email",
   "name": "Email relay",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "host_api": 1,
-  "description": "POST task events as JSON to your own HTTPS-to-SMTP (or Mailgun/SendGrid) relay. Does not use Admin \u2192 Email.",
+  "description": "POST task events as JSON to your own HTTPS-to-SMTP (or Mailgun/SendGrid) relay. Does not use Admin → Email.",
+  "author": "SentientTD Studios",
+  "homepage": "https://sentienttd.studio",
+  "license": "MIT",
+  "icon": "icon.svg",
   "hooks": [
     {
-      "on": "task.created"
+      "on": "task.created",
+      "label": "Task created"
     },
     {
-      "on": "task.updated"
+      "on": "task.updated",
+      "label": "Task updated"
     },
     {
-      "on": "task.deleted"
+      "on": "task.deleted",
+      "label": "Task deleted"
     },
     {
-      "on": "task.commented"
+      "on": "task.commented",
+      "label": "Comment posted"
     },
     {
-      "on": "task.claimed"
+      "on": "task.claimed",
+      "label": "Task claimed"
     },
     {
-      "on": "task.due_changed"
+      "on": "task.due_changed",
+      "label": "Due date changed"
     },
     {
-      "on": "task.overdue"
+      "on": "task.overdue",
+      "label": "Task overdue"
+    },
+    {
+      "on": "task.mentioned",
+      "label": "You were mentioned"
+    },
+    {
+      "on": "task.completed",
+      "label": "Task completed"
+    },
+    {
+      "on": "task.reopened",
+      "label": "Task reopened"
+    },
+    {
+      "on": "task.due_soon",
+      "label": "Due tomorrow"
+    },
+    {
+      "on": "task.archived",
+      "label": "Task archived"
+    },
+    {
+      "on": "task.restored",
+      "label": "Task restored"
+    },
+    {
+      "on": "task.project_changed",
+      "label": "Moved to another project"
+    },
+    {
+      "on": "task.sprint_changed",
+      "label": "Sprint changed"
+    },
+    {
+      "on": "project.archived",
+      "label": "Project archived"
+    },
+    {
+      "on": "project.restored",
+      "label": "Project restored"
+    },
+    {
+      "on": "project.member_joined",
+      "label": "Member joined"
+    },
+    {
+      "on": "project.member_left",
+      "label": "Member left"
+    },
+    {
+      "on": "sprint.created",
+      "label": "Sprint created"
+    },
+    {
+      "on": "sprint.started",
+      "label": "Sprint started"
+    },
+    {
+      "on": "sprint.ended",
+      "label": "Sprint ended"
     }
   ],
   "delivery": {
@@ -37,7 +108,7 @@
       "key": "webhook_url",
       "type": "secret",
       "label": "Relay URL",
-      "description": "Public HTTPS URL of your email relay. Private/LAN hosts are rejected. Admin \u2192 Email is never used.",
+      "description": "Public HTTPS URL of your email relay. Private/LAN hosts are rejected. Admin → Email is never used.",
       "required": true,
       "scope": "project"
     },
@@ -121,12 +192,27 @@
   ],
   "templates": {
     "task.created": "New task {name} in {project}",
-    "task.updated": "{name} \u2192 {status} in {project}",
+    "task.updated": "{name} → {status} in {project}",
     "task.deleted": "{name} deleted from {project}",
     "task.commented": "{actor} on {name}: {comment}",
     "task.claimed": "{actor} claimed {name}",
     "task.due_changed": "{name} due {due_date}",
-    "task.overdue": "{name} is overdue ({due_date})"
+    "task.overdue": "{name} is overdue ({due_date})",
+    "task.mentioned": "{mentions} mentioned in {name} by {actor}: {comment} ({url})",
+    "task.completed": "{actor} completed {name} in {project} ({url})",
+    "task.reopened": "{actor} reopened {name} in {project} ({url})",
+    "task.due_soon": "{name} is due tomorrow ({due_date}) in {project} ({url})",
+    "task.archived": "{actor} archived {name} in {project}",
+    "task.restored": "{actor} restored {name} in {project} ({url})",
+    "task.project_changed": "{name} moved to project {project} ({url})",
+    "task.sprint_changed": "{name} is now in sprint {sprint} ({url})",
+    "project.archived": "Project {project} was archived by {actor}",
+    "project.restored": "Project {project} was restored by {actor}",
+    "project.member_joined": "{member} joined {project}",
+    "project.member_left": "{member} left {project}",
+    "sprint.created": "Sprint {sprint} created in {project}",
+    "sprint.started": "Sprint {sprint} started in {project}",
+    "sprint.ended": "Sprint {sprint} ended in {project}"
   },
   "controls": [
     "send_test",

@@ -1,12 +1,21 @@
 {
   "id": "comments",
   "name": "Comments webhook",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "host_api": 1,
   "description": "Post discussion comments as JSON to n8n, Zapier, or any public HTTPS listener.",
+  "author": "SentientTD Studios",
+  "homepage": "https://sentienttd.studio",
+  "license": "MIT",
+  "icon": "icon.svg",
   "hooks": [
     {
-      "on": "task.commented"
+      "on": "task.commented",
+      "label": "Comment posted"
+    },
+    {
+      "on": "task.mentioned",
+      "label": "You were mentioned"
     }
   ],
   "delivery": {
@@ -88,7 +97,8 @@
     }
   ],
   "templates": {
-    "task.commented": "{actor} commented on {name}: {comment} ({url})"
+    "task.commented": "{actor} commented on {name}: {comment} ({url})",
+    "task.mentioned": "{mentions} mentioned in {name} by {actor}: {comment} ({url})"
   },
   "controls": [
     "send_test",

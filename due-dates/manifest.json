@@ -1,15 +1,25 @@
 {
   "id": "due-dates",
   "name": "Due dates",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "host_api": 1,
   "description": "POST due-date and overdue events as JSON to your own HTTPS-to-SMTP (or Mailgun/SendGrid) relay. Quieter than the full Email relay. Does not use Admin → Email.",
+  "author": "SentientTD Studios",
+  "homepage": "https://sentienttd.studio",
+  "license": "MIT",
+  "icon": "icon.svg",
   "hooks": [
     {
-      "on": "task.due_changed"
+      "on": "task.due_changed",
+      "label": "Due date changed"
     },
     {
-      "on": "task.overdue"
+      "on": "task.overdue",
+      "label": "Task overdue"
+    },
+    {
+      "on": "task.due_soon",
+      "label": "Due tomorrow"
     }
   ],
   "delivery": {
@@ -85,7 +95,8 @@
   ],
   "templates": {
     "task.due_changed": "Due date for {name} in {project} is now {due_date} ({url})",
-    "task.overdue": "{name} is overdue ({due_date}) in {project} ({url})"
+    "task.overdue": "{name} is overdue ({due_date}) in {project} ({url})",
+    "task.due_soon": "{name} is due tomorrow ({due_date}) in {project} ({url})"
   },
   "controls": [
     "send_test",
