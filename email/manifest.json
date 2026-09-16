@@ -1,17 +1,31 @@
 {
   "id": "email",
   "name": "Email relay",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "host_api": 1,
-  "description": "POST task events as JSON to your own HTTPS-to-SMTP (or Mailgun/SendGrid) relay. Does not use Admin → Email.",
+  "description": "POST task events as JSON to your own HTTPS-to-SMTP (or Mailgun/SendGrid) relay. Does not use Admin \u2192 Email.",
   "hooks": [
-    { "on": "task.created" },
-    { "on": "task.updated" },
-    { "on": "task.deleted" },
-    { "on": "task.commented" },
-    { "on": "task.claimed" },
-    { "on": "task.due_changed" },
-    { "on": "task.overdue" }
+    {
+      "on": "task.created"
+    },
+    {
+      "on": "task.updated"
+    },
+    {
+      "on": "task.deleted"
+    },
+    {
+      "on": "task.commented"
+    },
+    {
+      "on": "task.claimed"
+    },
+    {
+      "on": "task.due_changed"
+    },
+    {
+      "on": "task.overdue"
+    }
   ],
   "delivery": {
     "type": "http.webhook",
@@ -23,7 +37,7 @@
       "key": "webhook_url",
       "type": "secret",
       "label": "Relay URL",
-      "description": "Public HTTPS URL of your email relay. Private/LAN hosts are rejected. Admin → Email is never used.",
+      "description": "Public HTTPS URL of your email relay. Private/LAN hosts are rejected. Admin \u2192 Email is never used.",
       "required": true,
       "scope": "project"
     },
@@ -40,15 +54,83 @@
       "label": "Only notify when status changes (for task.updated)",
       "description": "When enabled, task.updated is skipped unless the kanban or list status actually changed.",
       "scope": "project"
+    },
+    {
+      "key": "skip_self",
+      "type": "bool",
+      "label": "Skip events I caused",
+      "description": "Do not post when you are the actor.",
+      "scope": "project"
+    },
+    {
+      "key": "claimed_only",
+      "type": "bool",
+      "label": "Only claimed tasks",
+      "description": "Skip events for tasks that nobody has claimed.",
+      "scope": "project"
+    },
+    {
+      "key": "min_priority",
+      "type": "priority",
+      "label": "Minimum priority",
+      "description": "Ignore events below this priority.",
+      "scope": "project"
+    },
+    {
+      "key": "tag_ids",
+      "type": "tag_ids",
+      "label": "Only these tags",
+      "description": "If any tags are selected, only matching tasks notify.",
+      "scope": "project"
+    },
+    {
+      "key": "quiet_hours_start",
+      "type": "time",
+      "label": "Quiet hours start",
+      "description": "Hold deliveries until quiet hours end. Leave blank to send immediately.",
+      "scope": "project"
+    },
+    {
+      "key": "quiet_hours_end",
+      "type": "time",
+      "label": "Quiet hours end",
+      "description": "End of the quiet window in your timezone.",
+      "scope": "project"
+    },
+    {
+      "key": "digest",
+      "type": "digest",
+      "label": "Digest",
+      "description": "Batch notifications hourly or daily instead of sending immediately.",
+      "scope": "project"
+    },
+    {
+      "key": "field_filter",
+      "type": "field_filter",
+      "label": "Custom field filter",
+      "description": "Only notify when this custom field key matches (and equals the value if set).",
+      "scope": "project"
+    },
+    {
+      "key": "mention_map",
+      "type": "mention_map",
+      "label": "Actor mention map (JSON)",
+      "description": "Map Ordryn usernames to chat mentions, for example {\"ada\":\"<@U123>\"}.",
+      "scope": "project"
     }
   ],
   "templates": {
     "task.created": "New task {name} in {project}",
-    "task.updated": "{name} → {status} in {project}",
+    "task.updated": "{name} \u2192 {status} in {project}",
     "task.deleted": "{name} deleted from {project}",
     "task.commented": "{actor} on {name}: {comment}",
     "task.claimed": "{actor} claimed {name}",
     "task.due_changed": "{name} due {due_date}",
     "task.overdue": "{name} is overdue ({due_date})"
-  }
+  },
+  "controls": [
+    "send_test",
+    "rotate_signing",
+    "sample_json"
+  ]
 }
