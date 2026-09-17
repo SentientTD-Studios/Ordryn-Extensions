@@ -6,7 +6,9 @@ Core is not patched; this folder is a drop-in extension. Each **project owner** 
 
 This manifest uses `"delivery": { "type": "http.webhook", "format": "json" }`. Authors writing their own extension can instead set `format` to `text` (`{"text": "…"}`, Slack-style) or `content` (`{"content": "…"}`, Discord-style).
 
-Outbound requests include `X-Ordryn-Signature: sha256=<hex>` when a signing secret is rotated on the Extensions panel. The HMAC is over the raw JSON body.
+Outbound requests send `User-Agent: Ordryn-Webhook/1` and `X-Ordryn-Event-Id`. Queued deliveries also send `X-Ordryn-Delivery-Id`. They include `X-Ordryn-Signature: sha256=<hex>` when a signing secret is rotated on the Extensions panel. The HMAC is over the raw JSON body.
+
+This folder declares a large event set. The host catalog is larger (status/comment splits, project create/delete, invites, import, and more). See the [wiki Hooks page](https://github.com/sentientTD-Studios/Ordryn-Extensions/wiki/Hooks).
 
 ## Install
 
@@ -42,10 +44,16 @@ Outbound requests include `X-Ordryn-Signature: sha256=<hex>` when a signing secr
   "due_date": "2026-09-20",
   "sprint": "Sprint 1",
   "tags": "release",
-  "fields": {"severity.level": "high"}
+  "fields": {"severity.level": "high"},
+  "actor_detail": {"id": 7, "name": "ada"},
+  "task_detail": {"id": 42, "title": "Ship", "status": "Done", "priority": "High"},
+  "project_detail": {"id": 3, "name": "Ordryn"},
+  "changes": [{"field": "status", "old": "In progress", "new": "Done"}]
 }
 ```
 
-Templates may use `{task}` `{name}` `{status}` `{old_status}` `{project}` `{actor}` `{url}` `{id}` `{priority}` `{comment}` `{claimed_by}` `{due_date}` `{sprint}` `{tags}` `{mentions}` `{member}` `{count}` `{event_id}`. Leave a template blank to skip that trigger.
+JSON bodies also include `config` when the extension has generic `select` / `status` / `user` / `string` / `int` settings, `digest_events` on batched deliveries, and `callback_token` / `callback_url` when the manifest declares `permissions`.
+
+Templates may use `{task}` `{name}` `{status}` `{old_status}` `{project}` `{actor}` `{actor_id}` `{url}` `{id}` `{priority}` `{comment}` `{claimed_by}` `{due_date}` `{sprint}` `{tags}` `{mentions}` `{member}` `{count}` `{event}` `{event_id}` `{occurred_at}` `{changed}` `{fields}`. Leave a template blank to skip that trigger. `templates["*"]` is the fallback when an event has no specific template.
 
 `join.request`, `join.approved`, and `join.denied` are site-level only (Admin → Extensions site URL). They are never posted into every project channel.

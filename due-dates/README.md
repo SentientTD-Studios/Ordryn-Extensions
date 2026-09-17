@@ -27,10 +27,8 @@ export SMTP_PASS=secret
 export MAIL_FROM=relay@example.com
 export MAIL_TO=alerts@example.com
 export ORDRYN_SIGNING_SECRET='the secret shown once after Rotate signing secret'
-go run ./examples/extensions/due-dates/relay
+go run ./relay
 ```
-
-If you already copied this folder into `data/extensions/due-dates`, run `go run ./relay` from that directory instead.
 
 Put that process behind public HTTPS (Caddy, nginx, Cloudflare Tunnel, or similar). Ordryn will not POST to `localhost`.
 
